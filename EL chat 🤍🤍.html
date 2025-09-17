@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Para Dahiana 💖</title>
+  <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-database-compat.js"></script>
+  <style>
+    body{margin:0;background:#0f1022;color:#fff;font-family:Inter,system-ui,sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh}
+    .stage{width:92vw;max-width:900px;background:rgba(255,255,255,0.05);border-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,0.6);padding:20px;}
+    .poem .line{opacity:0;transform:translateY(8px);transition:all .6s ease}
+    .poem .visible{opacity:1;transform:translateY(0)}
+    .chat-box{margin-top:20px;max-height:220px;overflow-y:auto;background:rgba(255,255,255,0.08);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:8px}
+    .msg{background:rgba(255,255,255,0.15);padding:6px 10px;border-radius:8px;max-width:80%;}
+    .mine{align-self:flex-end;background:rgba(255,255,255,0.3);}
+    .controls{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+    button{background:white;color:black;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:600}
+    input{flex:1;border:none;padding:8px 10px;border-radius:8px;outline:none;background:rgba(255,255,255,0.1);color:#fff}
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <h2>Para Dahiana 💌</h2>
+    <div class="poem" id="poema">
+      <div class="line">Eres la calma en mis días agitados,</div>
+      <div class="line">la risa que enciende mis mañanas,</div>
+      <div class="line">el abrazo que hace que todo tenga sentido.</div>
+      <div class="line">Contigo aprendí que lo pequeño es infinito.</div>
+    </div>
+
+    <div class="controls">
+      <button id="showLines">Mostrar versos</button>
+      <button id="bloom">Lluvia de corazones</button>
+      <button id="confetti">Celebrar</button>
+    </div>
+
+    <div class="controls">
+      <input id="mensajeInput" placeholder="Escribe tu mensaje..." />
+      <button id="sendMsg">Enviar</button>
+    </div>
+
+    <div class="chat-box" id="chat"></div>
+  </div>
+
+  <canvas id="fx" style="position:fixed;left:0;top:0;pointer-events:none"></canvas>
+
+  <script>
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDjR01ljdYuhyosAIRbs8jiUOF5CgfrWyE",
+  authDomain: "el-chat-de-mi-amor.firebaseapp.com",
+  databaseURL: "https://el-chat-de-mi-amor-default-rtdb.firebaseio.com",
+  projectId: "el-chat-de-mi-amor",
+  storageBucket: "el-chat-de-mi-amor.firebasestorage.app",
+  messagingSenderId: "608211247512",
+  appId: "1:608211247512:web:b80330748b383b50fe0bed"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const chatRef = db.ref('mensajes');
+    const chatBox = document.getElementById('chat');
+    const input = document.getElementById('mensajeInput');
+    const sendBtn = document.getElementById('sendMsg');
+
+    function renderMessage(id, data){
+      const div = document.createElement('div');
+      div.className = 'msg' + (data.autor==='Aryan' ? ' mine':'');
+      div.textContent = data.texto;
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // Escuchar mensajes en tiempo real
+    chatRef.on('value', snapshot => {
+      chatBox.innerHTML = '';
+      const now = Date.now();
+      snapshot.forEach(child => {
+        const data = child.val();
+        if(now - data.timestamp < 24*60*60*1000){ // menos de 24h
+          renderMessage(child.key, data);
+        } else {
+          chatRef.child(child.key).remove(); // borrar caducado
+        }
+      });
+    });
+
+    sendBtn.addEventListener('click', ()=>{
+      const texto = input.value.trim();
+      if(!texto) return;
+      chatRef.push({texto, autor:'Aryan', timestamp:Date.now()});
+      input.value='';
+    });
+
+    // Animar versos
+    const lines = document.querySelectorAll('.poem .line');
+    document.getElementById('showLines').addEventListener('click',()=>{
+      lines.forEach((l,i)=> setTimeout(()=> l.classList.add('visible'), i*600));
+    });
+
+    // Efectos (corazones + confetti)
+    const canvas = document.getElementById('fx');
+    const ctx = canvas.getContext('2d');
+    function resize(){canvas.width=innerWidth;canvas.height=innerHeight;} resize(); window.addEventListener('resize',resize);
+
+    function spawnHeart(x,y){
+      const el=document.createElement('div');
+      el.textContent='🤍'; el.style.position='fixed'; el.style.left=x+'px'; el.style.top=y+'px'; el.style.fontSize='32px'; el.style.pointerEvents='none'; document.body.appendChild(el);
+      el.animate([{transform:'scale(1)',opacity:1},{transform:'translateY(-100px) scale(0.6)',opacity:0}],{duration:1500,easing:'ease-out'});
+      setTimeout(()=>el.remove(),1600);
+    }
+
+    document.getElementById('bloom').addEventListener('click',()=>{
+      for(let i=0;i<20;i++) setTimeout(()=>spawnHeart(Math.random()*innerWidth,Math.random()*innerHeight),i*80);
+    });
+
+    document.getElementById('confetti').addEventListener('click',()=>{
+      const pieces=[];for(let i=0;i<150;i++){pieces.push({x:Math.random()*canvas.width,y:-10,r:2+Math.random()*3,vx:(Math.random()-0.5)*2,vy:2+Math.random()*3});}
+      function frame(){ctx.clearRect(0,0,canvas.width,canvas.height);pieces.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=0.02;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();}); if(pieces.some(p=>p.y<canvas.height))requestAnimationFrame(frame);}
+      frame();
+    });
+  </script>
+</body>
+</html>
