@@ -338,6 +338,44 @@ messagesRef.on('value',snapshot=>{
   snapshot.forEach(child=>{if(child.val().timestamp<cutoff) child.ref.remove();});
 });
 
+  /* --- Responsivo --- */
+@media (max-width:880px){
+  .card{grid-template-columns:1fr; grid-auto-rows:auto;}
+  .right{height:auto; padding:14px;}
+  .left{padding:16px;}
+  .poem{font-size:18px; line-height:1.4;}
+  .input{padding:8px 10px;}
+  button.small{padding:6px 10px; font-size:12px;}
+  .big-heart{width:280px; height:280px; right:-40px; top:-10px; transform:rotate(-12deg) scale(0.8);}
+}
+@media (max-width:480px){
+  .poem{font-size:16px; line-height:1.3;}
+  .input{font-size:14px;}
+  .controls button{padding:6px 8px; font-size:11px;}
+  .heart-emoji{font-size:36px;}
+}
+</style>
+</head>
+<body>
+<div class="stage">
+<header>
+  <div class="logo">
+    <div class="heart" id="topHeart">🤍</div>
+    <div>
+      <h1 id="title">Una sorpresa para ti</h1>
+      <div style="font-size:12px;opacity:0.85">Haz clic en los corazones, escribe y comparte tu amor ✨</div>
+    </div>
+  </div>
+  <div style="margin-left:auto;display:flex;gap:8px">
+    <button class="small ghost" id="toggleNight">Modo noche</button>
+    <button class="small" id="reset">Reiniciar</button>
+  </div>
+</header>
+
+<div class="card">
+  <!-- (Aquí va todo tu HTML de la tarjeta y chat original) -->
+</div>
+
 }); // DOMContentLoaded
 </script>
 </body>
