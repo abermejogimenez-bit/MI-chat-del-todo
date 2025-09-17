@@ -36,6 +36,123 @@ footer{position:absolute;left:24px;bottom:18px;font-size:12px;opacity:0.75;}
 @media (max-width:880px){.card{grid-template-columns:1fr; grid-auto-rows: auto 220px}.right{height: auto}}
 </style>
 </head>
+<style>
+/* ===== MOVIL: Scroll completo estilo desktop ===== */
+html, body {
+  height: auto !important;       /* altura automática */
+  overflow-y: auto !important;   /* scroll vertical completo */
+  margin: 0;
+}
+
+.stage {
+  height: auto !important;       /* que se expanda con todo el contenido */
+  max-height: none !important;
+  display: flex;
+  flex-direction: column;        /* apilar todo */
+  gap: 16px;
+  padding: 16px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;        /* apilar izquierda y derecha */
+  gap: 16px;
+  height: auto !important;
+  max-height: none !important;
+}
+
+/* Secciones izquierda y derecha */
+.left, .right {
+  width: 100%;
+  height: auto !important;
+  max-height: none !important;
+  padding: 16px;
+  border-radius: 14px;
+}
+
+/* Poema */
+.poem {
+  font-size: 18px;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+/* Controles y botones */
+.controls {
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.controls button, .input {
+  font-size: 14px;
+  padding: 8px 12px;
+  flex: 1 1 auto;
+}
+
+/* Chat visible y scrollable */
+#chatBox {
+  height: 200px;           /* altura inicial */
+  max-height: none !important;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+  padding: 6px;
+}
+#chatBox div {
+  word-break: break-word;
+}
+
+#chatInput {
+  width: 100%;
+  flex: none;
+}
+
+/* Heart zone */
+#heartZone {
+  height: 180px;
+}
+
+/* Cabecera */
+header {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+header h1 {
+  font-size: 16px;
+}
+
+/* Footer */
+footer {
+  font-size: 11px;
+}
+
+/* Ajustes muy pequeños (<480px) */
+@media (max-width: 480px) {
+  .poem {
+    font-size: 16px;
+  }
+  .controls button, .input {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+  #chatBox {
+    height: 160px;
+  }
+  #heartZone {
+    height: 140px;
+  }
+}
+</style>
+
+
+
+
+
+</style>
+
 <body>
 <div class="stage">
 <header>
@@ -82,7 +199,7 @@ footer{position:absolute;left:24px;bottom:18px;font-size:12px;opacity:0.75;}
         </div>
       </div>
     </div>
-    <footer>✨ Guarda esta página y envíasela a quien quieras. 🤍</footer>
+    <footer> 🤍</footer>
   </section>
 
   <aside class="right">
